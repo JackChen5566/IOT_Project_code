@@ -1,0 +1,69 @@
+
+CREATE DATABASE IF NOT EXISTS led_control;
+USE led_control;
+
+CREATE TABLE IF NOT EXISTS led_states (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    led_number INT,
+    state INT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE DATABASE IF NOT EXISTS temp_control;
+USE temp_control;
+
+CREATE TABLE TemperatureHumidityData (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Temperature FLOAT,
+    Humidity FLOAT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE DATABASE IF NOT EXISTS waterpump_control;
+USE waterpump_control;
+
+CREATE TABLE IF NOT EXISTS waterpump_state (
+	ID INT AUTO_INCREMENT PRIMARY KEY,
+    state VARCHAR(10),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+*****Cart*****
+
+CREATE TABLE myapp_productmodel (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pname VARCHAR(100) DEFAULT '',
+    pprice INT DEFAULT 0,
+    pimages VARCHAR(100) DEFAULT '',
+    pdescription TEXT
+);
+
+CREATE TABLE myapp_ordersmodel (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    subtotal INT DEFAULT 0,
+    shipping INT DEFAULT 0,
+    grandtotal INT DEFAULT 0,
+    customname VARCHAR(100) DEFAULT '',
+    customemail VARCHAR(100) DEFAULT '',
+    customaddress VARCHAR(100) DEFAULT '',
+    customphone VARCHAR(100) DEFAULT '',
+    paytype VARCHAR(50) DEFAULT ''
+);
+
+CREATE TABLE myapp_detailmodel (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    dorder_id INT,
+    pname VARCHAR(100) DEFAULT '',
+    unitprice INT DEFAULT 0,
+    quantity INT DEFAULT 0,
+    dtotal INT DEFAULT 0,
+    FOREIGN KEY (dorder_id) REFERENCES myapp_ordersmodel(id) ON DELETE CASCADE
+);
+
+CREATE TABLE django_session (
+    session_key VARCHAR(40) PRIMARY KEY,
+    session_data LONGTEXT,
+    expire_date DATETIME(6)
+);

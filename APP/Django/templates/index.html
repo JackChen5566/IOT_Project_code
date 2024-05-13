@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+        <style>
+        #buttonContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            background-image: linear-gradient(30deg , #0048bd, #44a7fd);
+            padding: 10px; /* Padding around the container */
+            border: 1px solid #ccc; /* Gray border */
+            border-radius: 5px; /* Rounded corners */
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-size: 15px;
+            background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+            color: #ffffff;
+        }
+        div {
+            text-align: center;
+        }
+        img {
+            width: 47%;
+            height: auto;
+            display: block;
+            margin: auto;
+        }
+
+        .fnav{
+          text-align: center;
+        }
+        .button {
+          text-align: left;
+ 
+          font-weight: bold;
+          font-size: 20px;
+          border-radius: 12px;
+        }
+        .button:hover {
+          box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+        }
+ 
+    </style>
+    <!-- your head content -->
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <!-- Gray box container for buttons -->
+    <div id="buttonContainer">
+        <!-- First Row of Buttons -->
+
+        <div class="button">
+            <input type='button' onClick='changed(1)' value='Lighting'/>
+        </div>
+        <div class="button">
+            <input type='button' id='controlServoButton' onClick='controlServo()' value='Feed'/>
+        </div>
+        <div class="button">
+            <input type='button' onClick='pump_run()' value='WaterPump'/>
+        </div>
+    </div>
+    <h2>Temperature: <span id='tem'>0</span> &#8451 ,  PH: <span id='ph'>0</span></h2>
+    <div>
+	<img src="http://192.168.58.57:8080/?action=stream" />
+    </div>
+
+    <br/>
+
+	<script>
+        function changed(led) {
+            window.location.href='/' + led;
+        }
+
+        function controlServo() {
+            document.getElementById("controlServoButton").disabled = true;
+            setTimeout(function() {
+                document.getElementById("controlServoButton").disabled = false;
+            }, 5000);
+            window.location.href='/control_servo/';
+        }
+
+        function pump_run(){
+            window.location.href='/WaterPump/';
+        }
+
+        function setPH() {
+            fetch('/set_ph_value/')
+                .then(response => {
+
+                })
+                .catch(error => {
+            console.error('Error:', error);
+        });
+        }
+        setTemperature();
+        setInterval(setPH, 60000);
+
+
+        var phElement = document.getElementById('ph');
+        function updatePhValue() {
+            fetch('/ph_get/')
+                .then(response => response.json())
+                .then(data => {
+                    phElement.innerText = data.ph;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+        updatePhValue();
+        setInterval(updatePhValue, 60000); 
+
+
+        function setTemperature() {
+            fetch('/temperature_set/')
+                .then(response => {
+
+                })
+                .catch(error => {
+            console.error('Error:', error);
+        });
+        }
+        setTemperature();
+        setInterval(setTemperature, 60000);
+
+
+
+        var temElement = document.getElementById('tem');
+        function updateTemperature() {
+            fetch('/temperature_get/')
+                .then(response => response.json())
+                .then(data => {
+                    temElement.innerText = data.tem;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+        updateTemperature();
+        setInterval(updateTemperature, 60000);
+
+
+
+    </script>
+</body>
+</html>

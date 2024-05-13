@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LED State Database View</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 95%;
+            margin-top: 20px;
+            margin-left: 20px;
+        }
+
+        td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            color: Black;
+        }
+
+        div {
+            margin-left: 20px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-size: 15px;
+            background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+            color: #ffffff;
+        }
+
+    </style>
+<script type="text/javascript" src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+<script type="text/javascript">
+    function refreshPage() {
+        location.reload();
+        updateTemperature();
+        updatePH();
+    }
+
+    setInterval(refreshPage, 60000);
+
+    var timeLeft = 60;
+    function countdown() {
+        document.getElementById("countdown").innerText = "Next update in " + timeLeft + " seconds.";
+        timeLeft--;
+        if (timeLeft < 0) {
+            timeLeft = 60;
+        }
+    }
+    setInterval(countdown, 1000);
+
+    function updateTemperature() {
+        fetch('/temperature_gets/')
+            .then(response => response.json())
+            .then(data => {
+                var dataPoints = data.map(item => ({
+                    x: new Date(item.Timestamp),
+                    y: item.Temperature
+                }));
+
+                var chart = new CanvasJS.Chart("tempchart", {
+                    title: {
+                        text: "Temperature"
+                    },
+                    data: [{
+                        type: "line",
+                        dataPoints: dataPoints,
+                        lineColor: "#FF5733"
+                        }],
+                        backgroundColor: "#b7b4c2"
+                });
+
+                chart.render();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    updateTemperature();
+
+function updatePH() {
+        fetch('/ph_gets/')
+            .then(response => response.json())
+            .then(data => {
+                var dataPoints = data.map(item => ({
+                    x: new Date(item.Timestamp),
+                    y: item.PH_value
+                }));
+
+                var chart = new CanvasJS.Chart("phchart", {
+                    title: {
+                        text: "PH"
+                    },
+                    data: [{
+                        type: "line",
+                        dataPoints: dataPoints
+                        }],
+                        backgroundColor: "#d5d6b8"
+                });
+
+                chart.render();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    updatePH();
+
+</script>
+
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div id="tab1" class="tab-content">
+        <p id="countdown"></p>
+
+	<div id="tempchart" style="height: 300px; width: 95%;">
+        </div>
+        <br>
+        <br>
+	<div id="phchart" style="height: 300px; width: 95%;">
+        </div>
+        <br>
+	<h2>LED</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>LED Number</th>
+                    <th>State</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <tbody id="table-body">
+    {% for entry in led_data %}
+        <tr>
+            <td>{{ entry.ID }}</td>
+            <td>{{ entry.led_number }}</td>
+            <td>{{ entry.state }}</td>
+            <td>{{ entry.Timestamp }}</td>
+        </tr>
+    {% endfor %}
+</tbody>
+            </tbody>
+        </table>
+        <br>
+        <h2>Feed</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <tbody id="table-body">
+    {% for entry in feed_data %}
+        <tr>
+            <td>{{ entry.ID }}</td>
+            <td>{{ entry.Timestamp }}</td>
+        </tr>
+    {% endfor %}
+</tbody>
+            </tbody>
+        </table>
+        <br>
+<h2>Pump</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <tbody id="table-body">
+    {% for entry in pump_data %}
+        <tr>
+            <td>{{ entry.ID }}</td>
+            <td>{{ entry.Timestamp }}</td>
+        </tr>
+    {% endfor %}
+</tbody>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

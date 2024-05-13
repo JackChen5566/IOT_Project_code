@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "219147708012",
+    "firebase_url": "https://login-signup-frd-1eeba-default-rtdb.firebaseio.com",
+    "project_id": "login-signup-frd-1eeba",
+    "storage_bucket": "login-signup-frd-1eeba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219147708012:android:48c5d3c2de3c4230fd5a49",
+        "android_client_info": {
+          "package_name": "com.example.fishtank"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-PhEcSUPBobl9PP06Cg0DarwMKKdBXM8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219147708012:android:0fde48a6a8ba884cfd5a49",
+        "android_client_info": {
+          "package_name": "com.example.loginsignupfrd"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-PhEcSUPBobl9PP06Cg0DarwMKKdBXM8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
